@@ -1,0 +1,7 @@
+# Unused legacy files not referenced by any page
+assets/imgs/pages/football posters/img-3.png
+assets/imgs/video/live-bg.qt
+
+# OS/editor cruft
+.DS_Store
+Thumbs.db
