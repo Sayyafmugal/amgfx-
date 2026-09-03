@@ -245,6 +245,11 @@
                     </div>
                     <div class="col-xl-2 col-6">
                         <div class="at-header-right gap-3 d-flex justify-content-end align-items-center">
+                            <button type="button" id="mobileNavToggle" class="d-xl-none border-0 bg-transparent text-white p-0" aria-label="Toggle menu" aria-expanded="false" style="width: 26px; height: 20px; position: relative;">
+                                <span style="position: absolute; left: 0; right: 0; top: 0; height: 2px; background: currentColor;"></span>
+                                <span style="position: absolute; left: 0; right: 0; top: 9px; height: 2px; background: currentColor;"></span>
+                                <span style="position: absolute; left: 0; right: 0; top: 18px; height: 2px; background: currentColor;"></span>
+                            </button>
                             <div class="dark-light-mode">
                                 <label for="switch" class="toggle dark-light-switcher">
                                     <input type="checkbox" class="input" id="switch">
@@ -267,6 +272,38 @@
             </div>
         </div>
         <!-- header area end -->
+
+        <div id="mobileNavPanel" class="d-xl-none" style="display: none; position: relative; z-index: 999;">
+            <div class="container">
+                <nav style="background: rgba(0,0,0,.92); border-radius: 12px; margin-top: 10px; overflow: hidden;">
+                    <ul style="list-style: none; margin: 0; padding: 8px 0;">
+                        <li><a href="index.html" class="d-block text-white text-decoration-none px-4 py-3">Home</a></li>
+                        <li><a href="index.html#about" class="d-block text-white text-decoration-none px-4 py-3">About</a></li>
+                        <li><a href="portfolio-1.html" class="d-block text-white text-decoration-none px-4 py-3">Portfolio</a></li>
+                        <li><a href="index.html#services" class="d-block text-white text-decoration-none px-4 py-3">Services</a></li>
+                        <li><a href="index.html#contact" class="d-block text-white text-decoration-none px-4 py-3">Contact</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+        <script>
+            (function () {
+                var toggle = document.getElementById('mobileNavToggle');
+                var panel = document.getElementById('mobileNavPanel');
+                if (!toggle || !panel) return;
+                toggle.addEventListener('click', function () {
+                    var isOpen = panel.style.display === 'block';
+                    panel.style.display = isOpen ? 'none' : 'block';
+                    toggle.setAttribute('aria-expanded', String(!isOpen));
+                });
+                panel.querySelectorAll('a').forEach(function (link) {
+                    link.addEventListener('click', function () {
+                        panel.style.display = 'none';
+                        toggle.setAttribute('aria-expanded', 'false');
+                    });
+                });
+            })();
+        </script>
 
     </header>
     <!-- at-offcanvus-area-start -->
