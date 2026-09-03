@@ -198,6 +198,14 @@
             margin-top: 0;
             object-fit: cover;
         }
+        @media (max-width: 991.98px) {
+            /* Desktop uses a -100px transform to float this decorative cube up
+               into the row above; below lg the layout stacks vertically instead,
+               so the same offset drags it up into the paragraph text. */
+            .at-about-svg-wrap {
+                transform: none;
+            }
+        }
     </style>
 
 </head>
@@ -1734,6 +1742,53 @@
                 }
 
                 history.pushState(null, '', url.hash);
+            });
+        })();
+    </script>
+
+    <script>
+        // On mobile, the gsap ScrollTrigger-based reveal animations (fade-ins,
+        // char-by-char SplitText headings, image zoom-reveals, odometer counters)
+        // routinely get stuck at their pre-animation state — likely because their
+        // trigger positions are computed against the ScrollSmoother's virtualized
+        // scroll, which doesn't track touch-scroll the same way it tracks desktop
+        // wheel/drag input. Rather than debug that pipeline, just disable every
+        // scroll-linked reveal below the lg breakpoint and snap content straight
+        // to its finished state — nothing is lost since the animation is purely
+        // decorative.
+        (function () {
+            if (!window.matchMedia('(max-width: 991px)').matches) return;
+
+            function finalize() {
+                if (typeof ScrollTrigger !== 'undefined') {
+                    ScrollTrigger.getAll().forEach(function (st) { st.kill(); });
+                }
+
+                document.querySelectorAll('.odometer').forEach(function (el) {
+                    var count = el.getAttribute('data-count');
+                    if (!count) return;
+                    // odometer.js attaches a MutationObserver directly to this node
+                    // that re-renders any text change back into its (buggy-on-mobile)
+                    // digit-span markup, so a plain textContent write gets clobbered.
+                    // Replace the node outright so no observer is left watching it.
+                    var replacement = document.createElement(el.tagName);
+                    replacement.className = el.className.replace(/\bodometer\S*/g, '').trim();
+                    replacement.textContent = count;
+                    el.replaceWith(replacement);
+                });
+
+                var selectors = '.at_fade_anim, .anim-zoomin, .mg-portfolio-thumb, .reveal-text, .reveal-text *, .at-char-animation, .at-char-animation *, .at-rise-animation, .at-rise-animation *';
+                document.querySelectorAll(selectors).forEach(function (el) {
+                    if (!el.style) return;
+                    if (el.style.opacity !== '') el.style.opacity = '1';
+                    if (el.style.visibility === 'hidden') el.style.visibility = 'visible';
+                    if (el.style.transform && el.style.transform !== 'none') el.style.transform = 'none';
+                    if (el.style.scale && el.style.scale !== '1') el.style.scale = '1';
+                });
+            }
+
+            window.addEventListener('load', function () {
+                setTimeout(finalize, 800);
             });
         })();
     </script>
